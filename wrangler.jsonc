@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  "name": "lg-ac-quiet",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-15",
+
+  "triggers": {
+    "crons": ["*/5 * * * *"],
+  },
+
+  "vars": {
+    "LG_COUNTRY": "US",
+  },
+}

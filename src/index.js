@@ -77,6 +77,14 @@ async function enforceQuietMode(env) {
   const remainingSleepMinutes =
     (sleep.relativeHourToStop ?? 0) * 60 + (sleep.relativeMinuteToStop ?? 0);
 
+  console.log({
+    sleep,
+    relativeStopTimer: sleep.relativeStopTimer,
+    relativeHourToStop: sleep.relativeHourToStop,
+    relativeMinuteToStop: sleep.relativeMinuteToStop,
+    remainingSleepMinutes,
+  });
+
   //
   // Make sure Sleep is active.
   //

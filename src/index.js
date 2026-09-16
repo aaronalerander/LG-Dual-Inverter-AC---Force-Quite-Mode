@@ -58,6 +58,15 @@ async function enforceQuietMode(env) {
   // Only enforce quiet when in cool mode
   const mode = state.airConJobMode?.currentJobMode;
 
+  const sleep = state.sleepTimer ?? {};
+
+  const windStrength = state.airFlow?.windStrength;
+
+  const remainingSleepMinutes =
+    (sleep.relativeHourToStop ?? 0) * 60 + (sleep.relativeMinuteToStop ?? 0);
+
+  const targetTemperature = state.temperature?.targetTemperature;
+
   if (!["COOL"].includes(mode)) {
     console.log(`AC is in ${mode}; doing nothing`);
     return;
@@ -67,15 +76,10 @@ async function enforceQuietMode(env) {
   //
   // MEDIUM/HIGH = manual override.
   // Leave the AC completely alone.
-  if (state.airFlow?.windStrength !== "LOW") {
-    console.log(`Fan is ${state.airFlow?.windStrength}; manual override`);
+  if (windStrength !== "LOW") {
+    console.log(`Fan is ${windStrength}; manual override`);
     return;
   }
-
-  const sleep = state.sleepTimer ?? {};
-
-  const remainingSleepMinutes =
-    (sleep.relativeHourToStop ?? 0) * 60 + (sleep.relativeMinuteToStop ?? 0);
 
   // Make sure Sleep is active.
   //
@@ -97,9 +101,9 @@ async function enforceQuietMode(env) {
   // Sleep periodically raises the set temperature.
   // Force it back to QUITE_MODE_SET_TEMPERATURE C.
   //
-  if (state.temperature?.targetTemperature !== QUITE_MODE_SET_TEMPERATURE) {
+  if (targetTemperature !== QUITE_MODE_SET_TEMPERATURE) {
     console.log(
-      `Temperature is ${state.temperature?.targetTemperature}; resetting to ${QUITE_MODE_SET_TEMPERATURE}`,
+      `Temperature is ${targetTemperature}; resetting to ${QUITE_MODE_SET_TEMPERATURE}`,
     );
 
     await control(env, {
